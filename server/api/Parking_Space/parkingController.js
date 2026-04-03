@@ -120,8 +120,121 @@ const DeleteOne = (req, res) => {
   }
 };
 
+const Updatespace = (req, res) => {
+  let ErrMsg = [];
+
+  if (!req.body._id) {
+    ErrMsg.push("_id is required");
+  }
+
+  if (ErrMsg.length > 0) {
+    res.send({
+      status: 404,
+      message: ErrMsg,
+      success: false,
+    });
+  } else {
+    parkingModel
+      .findOne({ _id: req.body._id })
+      .then((Existspace) => {
+        if (Existspace == null) {
+          res.send({
+            status: 404,
+            message: "Not Found",
+            success: false,
+          });
+        } else {
+
+
+          if (req.body.ownerProfileId ) {
+            Existspace.ownerProfileId =req.body.ownerProfileId 
+          }
+
+          if (req.body.title) {
+            Existspace.title=req.body.title
+          }
+          if (req.body.address) {
+            Existspace.address=req.body.address
+          }
+          if (req.body.latitude) {
+            Existspace.latitude=req.body.latitude
+          }
+           if (req.body.longitude) {
+            Existspace.longitude=req.body.longitude
+          }
+
+          if (req.body.totalArea){
+            Existspace.totalArea=req.body.totalArea
+          }
+           if (req.body.parkingType){
+            Existspace.parkingType=req.body.parkingType
+          }
+          if (req.body.parking_images){
+            Existspace.parking_images=req.body.parking_images
+          }
+
+          Existspace.save() .then((data) => {
+              res.send({
+                status: 200,
+                message: "space  Updated",
+                data: data,
+              });
+            })
+            
+            .catch((err) => {
+              res.send({
+                status:500,
+                message:"Internal server error",
+                error:err
+              })
+            });
+
+
+
+        }
+      })
+      .catch((err) => {
+        res.send({
+          status: 500,
+          message: "Internal Server Error",
+          success: false,
+        });
+      });
+  }
+};
+const all = (req, res) => {
+  parkingModel
+    .find(req.body)
+    .then((Existspace) => {
+      if (Existspace == null) {
+        res.send({
+          status: 404,
+          message: "Space Not Found",
+          success: false,
+        });
+      } else {
+        res.send({
+          status: 200,
+          message: "All Space",
+          success: true,
+          totalspace: Existspace.length,
+          data: Existspace,
+        });
+      }
+    })
+    .catch((err) => {
+      res.send({
+        status: 500,
+        message: "Internal Server Error",
+        success: false,
+      });
+    });
+};
+
 module.exports={
     add,
     single,
-    DeleteOne
+    DeleteOne,
+    Updatespace,
+    all
 }

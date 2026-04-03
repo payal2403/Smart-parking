@@ -55,7 +55,7 @@ const register=(req,res)=>{
                 
                 
             }).catch((err)=>{
-                red.send({
+                res.send({
                     message:"Error while saving owner",
                     success:false,
                     error:err
