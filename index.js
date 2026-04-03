@@ -2,7 +2,11 @@ const express = require('express');
 const app = express();
 
 const db=require("./server/config/db")
+const adminseed=require("./server/config/seeder")
 
+adminseed()
+
+const userroutes=require("./server/routes/Apiroutes")
 
 
 

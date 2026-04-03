@@ -1,10 +1,10 @@
 const mongoose=require("mongoose")
 const availabilitySchema=new mongoose.Schema({
-    availabilityId :{type:Number},
-    parkingId:{type:Number},
+    // availabilityId :{type:Number},
+    parkingId:{type:mongoose.Schema.Types.ObjectId,ref:'availabilities'},
     dayOfWeek:{type:String},
-    startTime:{type:Date},
-    endTime:{type:Date},
+    startTime:{type:String},
+    endTime:{type:String},
     isActive:{type:Boolean},
     createdAt:{type:Date,default:Date.now()}
 

@@ -1,12 +1,12 @@
 const mongoose=require("mongoose")
 const paymentSchema=new mongoose.Schema({
-    parkingId:{type:Number},
-    bookingId:{type:Number},
-    userId:{type:Number},
+    // parkingId:{type:Number},
+    // bookingId:{type:Number},
+    // userId:{type:},
     amount:{type:Number},
     paymentMethod:{type:String},
-    transactionId:{type:Number},
-    paymentStatus:{type:Boolean},
+    transactionId:{type:mongoose.Schema.Types.ObjectId,ref:'payments' },
+    paymentStatus:{type:String},
     createdAt:{type:Date,default:Date.now()}
     
 

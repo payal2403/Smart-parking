@@ -1,6 +1,7 @@
 const usersModel = require("../Users/usersModel");
-// const userModel=require("../Users/usersModel");
+
 const OwnerModel=require("./OwnerModel");
+const bcrypt=require("bcrypt")
 
 const register=(req,res)=>{
     let errMsg=[];
@@ -30,7 +31,7 @@ const register=(req,res)=>{
             userObj.name=req.body.name;
             userObj.email=req.body.email;
             userObj.phone=req.body.phone;
-            userObj.password=req.body.password;
+            userObj.password=bcrypt.hashSync(req.body.password,10);
             userObj.userType="2"
             userObj.save().then((data)=>{
                 console.log(data._id);

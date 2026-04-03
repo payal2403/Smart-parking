@@ -1,22 +1,22 @@
-const paymentsModel=require("./paymentsModel")
+const pricingModel=require("./pricingModel")
 
 const add = (req, res) => {
-  let paymentsObj = new paymentsModel();
-//   paymentsObj.parkingId = req.body.parkingId;
-  paymentsObj.amount = req.body.amount;
-  paymentsObj.paymentMethod= req.body.paymentMethod;
-  paymentsObj.transactionId = req.body.transactionId;
-  paymentsObj.bookingType = req.body.bookinType;
-  paymentsObj.amount = req.body.amount;
+  let pricingObj = new pricingModel();
+//   pricingObj.parkingId = req.body.parkingId;
+  pricingObj.slotType = req.body.slotType;
+  pricingObj.hourlyRate= req.body.hourlyRate;
+  pricingObj.dailyRate = req.body.dailyRate;
+  pricingObj.monthlyRate = req.body.monthlyRate;
+ 
 
 
   
-  paymentsObj
+  pricingObj
     .save()
     .then((data) => {
       res.send({
         status: 201,
-        message: "Payment Created",
+        message: "Pricing Created",
         success:true,
         data: data,
       });
@@ -24,7 +24,7 @@ const add = (req, res) => {
     .catch((err) => {
       res.send({
     status: 500,
-    message: "Error while saving Payment",
+    message: "Error while saving pricing",
     success: false,
     error: err.message
   });
@@ -46,10 +46,10 @@ const single = (req, res) => {
       success: false,
     });
   } else {
-    paymentsModel
+    pricingModel
       .findOne({ _id: req.body._id })
-      .then((Existpayments) => {
-        if (Existpayments == null) {
+      .then((Existpricing) => {
+        if (Existpricing == null) {
           res.send({
             status: 404,
             message: "Not Found",
@@ -60,7 +60,7 @@ const single = (req, res) => {
             status: 200,
             message: "Found",
             success: true,
-            data: Existpayments,
+            data: Existpricing,
           });
         }
       })
@@ -88,17 +88,17 @@ const DeleteOne = (req, res) => {
       success: false,
     });
   } else {
-    paymentsModel
+    pricingModel
       .findOne({ _id: req.body._id })
-      .then((Existpayments) => {
-        if (Existpayments== null) {
+      .then((Existpricing) => {
+        if (Existpricing== null) {
           res.send({
             status: 404,
             message: "Not Found",
             success: false,
           });
         } else {
-          paymentsModel.deleteOne({ _id: req.body._id }).then(() => {
+          pricingModel.deleteOne({ _id: req.body._id }).then(() => {
             res.send({
               status: 200,
               message: "delete",
@@ -123,7 +123,7 @@ const DeleteOne = (req, res) => {
   }
 };
 
-const Updatepayments = (req, res) => {
+const Updatepricing = (req, res) => {
   let ErrMsg = [];
 
   if (!req.body._id) {
@@ -137,10 +137,10 @@ const Updatepayments = (req, res) => {
       success: false,
     });
   } else {
-    paymentsModel
+    pricingModel
       .findOne({ _id: req.body._id })
-      .then((Existpayments) => {
-        if (Existpayments == null) {
+      .then((Existpricing) => {
+        if (Existpricing == null) {
           res.send({
             status: 404,
             message: "Not Found",
@@ -149,29 +149,27 @@ const Updatepayments = (req, res) => {
         } else {
 
 
-        //   if (req.body.parkingId ) {
-            // Existpayments.parkingId =req.body.parkingId 
-        //   }
+       
 
-          if (req.body.amount) {
-            Existpayments.amount=req.body.amount
+          if (req.body.slotType) {
+            Existpricing.slotType=req.body.slotType
           }
-          if (req.body.paymentMethod) {
-            Existpayments.paymentMethod=req.body.paymentMethod
+          if (req.body.hourlyRate) {
+            Existpricing.hourlyRate=req.body.hourlyRate
           }
-          if (req.body.transactionId) {
-            Existpayments.transactionId=req.body.transactionId
+          if (req.body.dailyRate) {
+            Existpricing.dailyRate=req.body.dailyRate
           }
-           if (req.body.paymentStatus) {
-            Existpayments.paymentStatus=req.body.paymentStatus
+           if (req.body.monthlyRate) {
+            Existpricing.monthlyRate=req.body.monthlyRate
           }
 
           
 
-          Existpayments.save() .then((data) => {
+          Existpricing.save() .then((data) => {
               res.send({
                 status: 200,
-                message: "Payment Updated 🎉",
+                message: "Pricing Updated 🎉",
                 data: data,
               });
             })
@@ -199,13 +197,13 @@ const Updatepayments = (req, res) => {
 };
 
 const all = (req, res) => {
-  paymentsModel
+  pricingModel
     .find(req.body)
-    .then((Existpayments) => {
-      if (Existpayments == null) {
+    .then((Existpricing) => {
+      if (Existpricing == null) {
         res.send({
           status: 404,
-          message: "Payment Not Found",
+          message: "Pricing Not Found",
           success: false,
         });
       } else {
@@ -213,8 +211,8 @@ const all = (req, res) => {
           status: 200,
           message: "All Payment",
           success: true,
-          totalspace: Existpayments.length,
-          data: Existpayments,
+          totalspace: Existpricing.length,
+          data: Existpricing,
         });
       }
     })
@@ -230,7 +228,7 @@ module.exports={
     add,
     single,
     DeleteOne,
-    Updatepayments,
+    Updatepricing,
     all
 }
 

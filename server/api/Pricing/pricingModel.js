@@ -1,7 +1,7 @@
 const mongoose=require("mongoose")
 const pricingSchema=new mongoose.Schema({
-    pricingId:{type:Number},
-    parkingId:{type:Number},
+    pricingId:{type:mongoose.Schema.Types.ObjectId,ref:'pricings'},
+    // parkingId:{type:Number},
     slotType:{type:String},
     hourlyRate:{type:Number},
     dailyRate:{type:Number},

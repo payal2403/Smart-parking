@@ -1,13 +1,13 @@
 const mongoose=require("mongoose")
-const bookingScehma=new mongoose.Schema({
-    bookingId:{type:Number},
-    userId:{type:mongoose.Schema.types.ObjId,ref:'users'},
-    parkingId:{type:Number},
+const bookingSchema=new mongoose.Schema({
+    bookingId:{type:mongoose.Schema.Types.ObjectId,ref:'bookings'},
+    userId:{type:mongoose.Schema.Types.ObjectId,ref:'users'},
+    parkingId:{type:mongoose.Schema.Types.ObjectId,ref:'spaces'},
     slotType:{type:String},
-    startTime:{type:Date},
-    endTime:{type:Date},
+    startTime:{type:String},
+    endTime:{type:String},
     bookingType:{type:String},
-    amount:{type:Number},
+    amount:{type:String},
     paymentStatus:{type:Boolean},
     bookingStatus:{type:Boolean},
     createdAt:{type:Date,default:Date.now()}
