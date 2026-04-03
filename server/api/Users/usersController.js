@@ -2,6 +2,9 @@
 
 const userModel = require("./usersModel")
 const bcrypt=require("bcrypt")
+const jwt=require("jsonwebtoken")
+
+const skey = "hahahaha@2403";
 
 
 
@@ -27,13 +30,27 @@ if(!req.body.email || !req.body.password){
         }else{
            let confirm= bcrypt.compareSync(req.body.password, userData.password );
 
+             let payload={
+                userId:userData._id,
+                email:userData.email,
+                userType:userData.userType,
+                name:userData.name
+            }
+
+            console.log({userData});
+            console.log({payload});
+            
+
+            let token=jwt.sign(payload,skey)
+
            
 
             if(confirm){
                      res.send({
                 massage:"Login Successfully",
                 success:true,
-                status:200
+                status:200,
+                token:token
                 })
             }else{
                      res.send({
