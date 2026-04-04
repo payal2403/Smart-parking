@@ -2,7 +2,7 @@ const mongoose=require("mongoose")
 const bookingSchema=new mongoose.Schema({
     bookingId:{type:mongoose.Schema.Types.ObjectId,ref:'bookings'},
     userId:{type:mongoose.Schema.Types.ObjectId,ref:'users'},
-    parkingId:{type:mongoose.Schema.Types.ObjectId,ref:'spaces'},
+    // parkingId:{type:mongoose.Schema.Types.ObjectId,ref:'spaces'},
     slotType:{type:String},
     startTime:{type:String},
     endTime:{type:String},

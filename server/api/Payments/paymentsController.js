@@ -2,7 +2,7 @@ const paymentsModel=require("./paymentsModel")
 
 const add = (req, res) => {
   let paymentsObj = new paymentsModel();
-//   paymentsObj.parkingId = req.body.parkingId;
+    paymentsObj.bookingId = req.body.bookingId;
   paymentsObj.amount = req.body.amount;
   paymentsObj.paymentMethod= req.body.paymentMethod;
   paymentsObj.transactionId = req.body.transactionId;
@@ -149,9 +149,7 @@ const Updatepayments = (req, res) => {
         } else {
 
 
-        //   if (req.body.parkingId ) {
-            // Existpayments.parkingId =req.body.parkingId 
-        //   }
+        
 
           if (req.body.amount) {
             Existpayments.amount=req.body.amount

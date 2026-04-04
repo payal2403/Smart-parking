@@ -1,7 +1,7 @@
 const mongoose=require("mongoose")
 const slotSchema=new mongoose.Schema({
     // slotId:{type:mongoose.Schema.Types.ObjectId,ref:'slots'},
-    parkingId:{type:mongoose.Schema.Types.ObjectId,ref:'spaces'},
+    // parkingId:{type:mongoose.Schema.Types.ObjectId,ref:'spaces'},
     slotType:{type:String},
     maxVehicleCount:{type:String},
     areaUsed:{type:String},

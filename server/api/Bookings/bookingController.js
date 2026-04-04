@@ -2,7 +2,7 @@ const bookingModel=require("./bookingModel")
 
 const add = (req, res) => {
   let bookingObj = new bookingModel();
-  bookingObj.parkingId = req.body.parkingId;
+  bookingObj.userId = req.body.userId;
   bookingObj.slotType = req.body.slotType;
   bookingObj.startTime= req.body.startTime;
   bookingObj.endTime = req.body.endTime;

@@ -1,7 +1,7 @@
 const mongoose=require("mongoose")
 const paymentSchema=new mongoose.Schema({
     // parkingId:{type:Number},
-    // bookingId:{type:Number},
+    bookingId:{type:mongoose.Schema.Types.ObjectId,ref:'bookings'},
     // userId:{type:},
     amount:{type:Number},
     paymentMethod:{type:String},
