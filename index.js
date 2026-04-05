@@ -24,9 +24,11 @@ app.get('/', (req, res)=>{
     })
 
 const apiroutes=require("./server/routes/Apiroutes")
+const Userroutes=require("./server/routes/Userroutes")
 
    
 app.use("/apis",apiroutes)
+app.use("/users",Userroutes)
 
 
 

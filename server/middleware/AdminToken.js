@@ -15,9 +15,26 @@ module.exports = (req, res, next) => {
             success:false,
             err:err
         })
-    }else{
+    }else{console.log("decoded",decoded);
+      if(decoded.userType=="2"){
+        req.decoded=decoded
 
         next()
+
+      }else{
+          res.send({
+            message:"Invaild Token",
+            status:404,
+            success:false,
+            
+        })
+      }
+        
+
+      
+    
+
+        
     }
 
 
