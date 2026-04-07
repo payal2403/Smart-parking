@@ -7,21 +7,36 @@ const lateController=require("../api/Late_Penalty/lateController")
 const paController=require("../api/Parking_Availability/paController")
 const paymentsController=require("../api/Payments/paymentsController")
 const pricingController=require("../api/Pricing/pricingController")
+const multer=require("multer")
 
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'server/public')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, uniqueSuffix  + '-' +  file.fieldname)
+  }
+})
 
+const upload = multer({ storage: storage })
 
 const router=require("express").Router()
+
+
 
 // Login API
 router.post("/Users/login",userController.login)
 
-
-router.use(require("../middleware/AdminToken"))
-
-
 //Owner_Profile
 router.post("/Owner/add",OwnerController.register)
+
+
+
+// AdminToken
+router.use(require("../middleware/AdminToken"))
+
 
 // Parking_Space
 router.post("/parkingspace/add",parkingController.add)
