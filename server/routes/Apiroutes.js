@@ -35,11 +35,11 @@ router.post("/Owner/add",OwnerController.register)
 
 
 // AdminToken
-router.use(require("../middleware/AdminToken"))
+// router.use(require("../middleware/AdminToken"))
 
 
 // Parking_Space
-router.post("/parkingspace/add",parkingController.add)
+router.post("/parkingspace/add",upload.array("parking_images"),parkingController.add)
 router.post("/parkingspace/single",parkingController.single)
 router.post("/parkingspace/deleteOne",parkingController.DeleteOne)
 router.post("/parkingspace/Updatespace",parkingController.Updatespace)

@@ -9,7 +9,24 @@ const add = (req, res) => {
   parkingObj.longitude = req.body.longitude;
   parkingObj.totalArea = req.body.totalArea;
   parkingObj.parkingType = req.body.parkingType;
-  parkingObj.parking_images = req.body.parking_images;
+  // parkingObj.parking_images = req.body.parking_images;
+  if(!req.files){
+    return res.send({
+        status: 201,
+        message: "Image is required",
+        success:false
+      });
+  }
+
+
+ 
+  console.log(req.files);
+
+  req.files.map((f)=>{
+
+    parkingObj.parking_images.push(f.filename)
+  })
+
 
   parkingObj
     .save()
