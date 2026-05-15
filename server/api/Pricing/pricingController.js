@@ -171,6 +171,7 @@ const Updatepricing = (req, res) => {
                 status: 200,
                 message: "Pricing Updated 🎉",
                 data: data,
+                success:true,
               });
             })
             
@@ -178,6 +179,7 @@ const Updatepricing = (req, res) => {
               res.send({
                 status:500,
                 message:"Internal server error",
+                success:false,
                 error:err
               })
             });

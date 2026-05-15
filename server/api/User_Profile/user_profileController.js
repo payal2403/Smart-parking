@@ -1,9 +1,9 @@
 const usersModel = require("../Users/usersModel");
 
-const OwnerModel=require("./OwnerModel");
+const user_profileModel=require("./user_profileModel");
 const bcrypt=require("bcrypt")
 
-const register=(req,res)=>{
+const userRegister=(req,res)=>{
     let errMsg=[];
 
     if (!req.body.name){
@@ -32,21 +32,21 @@ const register=(req,res)=>{
             userObj.email=req.body.email;
             userObj.phone=req.body.phone;
             userObj.password=bcrypt.hashSync(req.body.password,10);
-            userObj.userType="2"
+            userObj.userType="3"
             userObj.save().then((data)=>{
                 console.log(data._id);
                
                 
 
-           let ownerObj=new OwnerModel();
-        
+           let ownerObj=new user_profileModel();
+           
             ownerObj.userId=data._id;
             ownerObj.idProofImage=req.body.idProofImage;
-            ownerObj.addressProofImage=req.body.addressProofImage;
+            ownerObj.address=req.body.address;
            
             ownerObj.save().then((owner)=>{
                 res.send({
-                    message:"Owner added successfully 🎉",
+                    message:"Users added successfully 🎉",
                     status:201,
                     success:true,
                     data:owner
@@ -57,7 +57,7 @@ const register=(req,res)=>{
                 
             }).catch((err)=>{
                 res.send({
-                    message:"Error while saving owner",
+                    message:"Error while saving Users",
                     success:false,
                     error:err
                 })
@@ -71,7 +71,7 @@ const register=(req,res)=>{
 
             } else{
                 res.send({
-                    message:"Owner already exist",
+                    message:"user already exist",
                     success:false,
                     status:403,
                 })
@@ -83,36 +83,6 @@ const register=(req,res)=>{
     
 }
 
-const all = (req, res) => {
-  OwnerModel
-    .find(req.body)
-    .then((ExistOwner) => {
-      if (ExistOwner == null) {
-        res.send({
-          status: 404,
-          message: "Owner Not Found",
-          success: false,
-        });
-      } else {
-        res.send({
-          status: 200,
-          message: "All Owner",
-          success: true,
-          totalspace: ExistOwner.length,
-          data: ExistOwner,
-        });
-      }
-    })
-    .catch((err) => {
-      res.send({
-        status: 500,
-        message: "Internal Server Error",
-        success: false,
-      });
-    });
-};
-
 module.exports={
-    register,
-    all
+    userRegister
 }

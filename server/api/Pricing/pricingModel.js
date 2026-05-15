@@ -1,6 +1,6 @@
 const mongoose=require("mongoose")
 const pricingSchema=new mongoose.Schema({
-    pricingId:{type:mongoose.Schema.Types.ObjectId,ref:'pricings'},
+    // pricingId:{type:mongoose.Schema.Types.ObjectId,ref:'pricings'},
     // parkingId:{type:Number},
     slotType:{type:String},
     hourlyRate:{type:Number},

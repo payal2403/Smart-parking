@@ -1,4 +1,5 @@
 const parkingModel=require("./parkingModel");
+const { uploadImg } = require("../../utilities/helper");
 
 const add = (req, res) => {
   let parkingObj = new parkingModel();
@@ -10,22 +11,63 @@ const add = (req, res) => {
   parkingObj.totalArea = req.body.totalArea;
   parkingObj.parkingType = req.body.parkingType;
   // parkingObj.parking_images = req.body.parking_images;
-  if(!req.files){
+  let errmsg=[]
+
+  if(!req.file){
     return res.send({
         status: 201,
         message: "Image is required",
         success:false
       });
   }
+  
+  if (errmsg.length > 0) {
+    res.send({
+      success: false,
+      status: 400,
+      message: errmsg,
+    });
+  } else {
 
+  parkingModel.findOne({ title: req.body.title })
+      .then(async(Data) => {
+        // console.log("HLo",Data);
+        if (Data == null) {
+          // let parkingObj = new parkingModel();
+
+          parkingObj.title= req.body.title;
+          parkingObj.address= req.body.address;
+          parkingObj.latitude= req.body.latitude;
+          parkingObj.longitude= req.body.longitude;
+          parkingObj.totalArea= req.body.totalArea;
+          // parkingObj.image = req.body.image;
+
+          try{
+
+            let url=await uploadImg(req.file.buffer)
+          parkingObj.parking_images = url
+
+
+          }catch(err){
+               res.send({
+                success: false,
+                status:403 ,
+                message: "Cloudinary err",
+                err: err,
+              });
+          }
+
+          console.log(parkingObj);
+
+        
 
  
-  console.log(req.files);
+  // console.log(req.files);
 
-  req.files.map((f)=>{
+  // req.files.map((f)=>{
 
-    parkingObj.parking_images.push(f.filename)
-  })
+  //   parkingObj.parking_images.push(f.filename)
+  // })
 
 
   parkingObj
@@ -34,6 +76,7 @@ const add = (req, res) => {
       res.send({
         status: 201,
         message: "Parking space Created",
+        success:true,
         data: data,
       });
     })
@@ -45,7 +88,23 @@ const add = (req, res) => {
     error: err.message
   });
     });
+  }
+})
+.catch((err)=>{
+   console.log(err);
+        
+        res.send({
+          success: false,
+          status: 500,
+          message: "Internal server Error",
+          err: err,
+        });
+      });
+
+}
 };
+
+
 const single = (req, res) => {
   let ErrMsg = [];
 
@@ -85,8 +144,12 @@ const single = (req, res) => {
           success: false,
         });
       });
-  }
+  
+ 
+    
+
 };
+}
 
 const DeleteOne = (req, res) => {
   let ErrMsg = [];
@@ -153,7 +216,7 @@ const Updatespace = (req, res) => {
   } else {
     parkingModel
       .findOne({ _id: req.body._id })
-      .then((Existspace) => {
+      .then(async(Existspace) => {
         if (Existspace == null) {
           res.send({
             status: 404,
@@ -186,14 +249,32 @@ const Updatespace = (req, res) => {
            if (req.body.parkingType){
             Existspace.parkingType=req.body.parkingType
           }
-          if (req.body.parking_images){
-            Existspace.parking_images=req.body.parking_images
-          }
-
+            if (req.file) {
+                       try {
+           
+                         let url = await uploadImg(req.file.buffer)
+                         Existspace.parking_images = url
+           
+           
+                       } catch (err) {
+                         console.log(err);
+                         
+                         return res.send({
+                           success: false,
+                           status: 403,
+                           message: "Cloudinary err",
+                           err: err,
+                         });
+                       }
+           
+                     }
+           
+            
           Existspace.save() .then((data) => {
               res.send({
                 status: 200,
                 message: "space  Updated",
+                success:true,
                 data: data,
               });
             })
@@ -202,6 +283,7 @@ const Updatespace = (req, res) => {
               res.send({
                 status:500,
                 message:"Internal server error",
+                success:false,
                 error:err
               })
             });
@@ -217,6 +299,7 @@ const Updatespace = (req, res) => {
           success: false,
         });
       });
+
   }
 };
 const all = (req, res) => {

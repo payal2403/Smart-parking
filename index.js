@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-
+const cors = require("cors");
 const db=require("./server/config/db")
 const adminseed=require("./server/config/seeder")
 
@@ -13,6 +13,7 @@ const userroutes=require("./server/routes/Apiroutes")
 app.use(express.urlencoded());
 
 app.use(express.json())
+app.use(cors());
 
 
 
@@ -24,10 +25,12 @@ app.get('/', (req, res)=>{
     })
 
 const apiroutes=require("./server/routes/Apiroutes")
+const ownerRoutes=require("./server/routes/OwnerRoutes")
 const Userroutes=require("./server/routes/Userroutes")
 
    
 app.use("/apis",apiroutes)
+app.use("/owner",ownerRoutes )
 app.use("/users",Userroutes)
 
 

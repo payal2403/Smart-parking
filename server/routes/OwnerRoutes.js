@@ -8,8 +8,6 @@ const paController=require("../api/Parking_Availability/paController")
 const paymentsController=require("../api/Payments/paymentsController")
 const pricingController=require("../api/Pricing/pricingController")
 const categoryController=require("../api/Category/categoryController")
-const user_profileController=require("../api/User_Profile/user_profileController")
-const ApiController=require("../api/Apicontroller/ApiController")
 const multer=require("multer")
 const cloudinary=require("cloudinary")
 
@@ -35,21 +33,18 @@ const upload = multer({ storage: storage })
 
 // Login API
 router.post("/Users/login",userController.login)
-router.post("/aicall",ApiController.main)
 
 //Owner_Profile
 router.post("/Owner/add",OwnerController.register)
 router.post("/Owner/all",OwnerController.all)
 
 
-//Users_Profile
-router.post("/Users/add",user_profileController.userRegister)
+
+
 
 router.post("/parkingspace/all",parkingController.all)
-
-
-// AdminToken
-router.use(require("../middleware/AdminToken"))
+// Ownertoknen
+router.use(require("../middleware/Ownertoken"))
 
 
 
@@ -99,7 +94,7 @@ router.post("/payments/all",paymentsController.all)
 router.post("/pricing/add",pricingController.add)
 router.post("/pricing/single",pricingController.single)
 router.post("/pricing/deleteOne",pricingController.DeleteOne)
-router.post("/pricing/UpdateCategory",pricingController.Updatepricing)
+router.post("/pricing/Updatepricing",pricingController.Updatepricing)
 router.post("/pricing/all",pricingController.all)
 
 

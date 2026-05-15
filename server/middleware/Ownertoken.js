@@ -15,9 +15,8 @@ module.exports = (req, res, next) => {
             success:false,
             err:err
         })
-    }else{
-         console.log("decoded",decoded);
-      if(decoded.userType=="3"){
+    }else{console.log("decoded",decoded);
+      if(decoded.userType=="2"){
         req.decoded=decoded
 
         next()
@@ -33,6 +32,9 @@ module.exports = (req, res, next) => {
         
 
       
+    
+
+        
     }
 
 

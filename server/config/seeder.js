@@ -1,5 +1,6 @@
 const usersModel = require("../api/Users/usersModel")
 
+const bcrypt=require("bcrypt")
 
 
 module.exports=()=>{
@@ -9,7 +10,7 @@ module.exports=()=>{
 
             userobj.name="admin",
             userobj.email="admin@gmail.com",
-            userobj.password="123",
+            userobj.password=bcrypt.hashSync("123",10),
             userobj.userType="1",
 
             userobj.save().then(()=>{

@@ -1,6 +1,6 @@
 const mongoose=require("mongoose")
 const penaltySchema=new mongoose.Schema({
-   penaltyId:{type:mongoose.Schema.Types.ObjectId,ref:'penalties'},
+//    penaltyId:{type:mongoose.Schema.Types.ObjectId,ref:'penalties'},
     bookingId:{type:String},
     lateMinutes:{type:String},
     penaltyAmount:{type:String},

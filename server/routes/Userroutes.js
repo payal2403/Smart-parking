@@ -1,4 +1,5 @@
 const OwnerController=require("../api/Owner_Profile/OwnerController")
+const user_profileController=require("../api/User_Profile/user_profileController")
 const parkingController=require("../api/Parking_Space/parkingController")
 const psController=require("../api/Parking Slots/psController")
 const bookingController=require("../api/Bookings/bookingController")
@@ -16,8 +17,13 @@ const router=require("express").Router()
 // Login API
 router.post("/Users/login",userController.login)
 
+
 //Owner_Profile
 router.post("/Owner/add",OwnerController.register)
+
+
+//Users_Profile
+router.post("/Users/add",user_profileController.userRegister)
 
 // Userroutes
 router.use(require("../middleware/usertoken"))

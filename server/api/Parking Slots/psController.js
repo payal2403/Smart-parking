@@ -3,7 +3,7 @@ const psModel=require("./psModel")
 
 const add = (req, res) => {
   let slotsObj = new psModel();
-  slotsObj.parkingId = req.body.parkingId;
+  // slotsObj.parkingId = req.body.parkingId;
   slotsObj.slotType = req.body.slotType;
   slotsObj.maxVehicleCount= req.body.maxVehicleCount;
   slotsObj.areaUsed = req.body.areaUsed;
@@ -165,6 +165,7 @@ const UpdateSlots = (req, res) => {
               res.send({
                 status: 200,
                 message: "Slot  Updated",
+                success:true,
                 data: data,
               });
             })
@@ -173,6 +174,7 @@ const UpdateSlots = (req, res) => {
               res.send({
                 status:500,
                 message:"Internal server error",
+                success:ture,
                 error:err
               })
             });
