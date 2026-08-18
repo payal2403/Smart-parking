@@ -1,118 +1,68 @@
-const OwnerController=require("../api/Owner_Profile/OwnerController")
-const parkingController=require("../api/Parking_Space/parkingController")
-const psController=require("../api/Parking Slots/psController")
-const bookingController=require("../api/Bookings/bookingController")
-const userController=require("../api/Users/usersController")
-const lateController=require("../api/Late_Penalty/lateController")
-const paController=require("../api/Parking_Availability/paController")
-const paymentsController=require("../api/Payments/paymentsController")
-const pricingController=require("../api/Pricing/pricingController")
-const categoryController=require("../api/Category/categoryController")
-const multer=require("multer")
-const cloudinary=require("cloudinary")
+const router = require("express").Router();
+const multer = require("multer");
 
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'server/public')
-//   },
-//   filename: function (req, file, cb) {
-//     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-//     cb(null, uniqueSuffix  + '-' +  file.fieldname)
-//   }
-// })
+const OwnerController = require("../api/Owner_Profile/OwnerController");
+const parkingController = require("../api/Parking_Space/parkingController");
+const psController = require("../api/Parking Slots/psController");
+const bookingController = require("../api/Bookings/bookingController");
+const paymentsController = require("../api/Payments/paymentsController");
+const pricingController = require("../api/Pricing/pricingController");
+const paController = require("../api/Parking_Availability/paController");
+const withdrawalController = require("../api/Withdrawals/withdrawalController");
+const disputeController = require("../api/Disputes/disputeController");
 
-// const upload = multer({ storage: storage })
+// Public owner registration
+router.post("/Owner/add", OwnerController.register);
 
-const router=require("express").Router()
+// Protected Owner Routes
+router.use(require("../middleware/Ownertoken"));
 
+// Owner Profile & Documents
+router.post("/profile", OwnerController.getProfile);
+router.post("/profile/documents", upload.fields([{ name: 'idProof', maxCount: 1 }, { name: 'addressProof', maxCount: 1 }]), OwnerController.updateDocuments);
+router.post("/profile/bank", OwnerController.updateBankDetails);
 
-const storage = multer.memoryStorage()
-const upload = multer({ storage: storage })
-
-
-// Login API
-router.post("/Users/login",userController.login)
-
-//Owner_Profile
-router.post("/Owner/add",OwnerController.register)
-router.post("/Owner/all",OwnerController.all)
-
-
-
-
-
-router.post("/parkingspace/all",parkingController.all)
-// Ownertoknen
-router.use(require("../middleware/Ownertoken"))
-
-
-
-// Parking_Space
-router.post("/parkingspace/add",upload.single("parking_images"),parkingController.add)
-router.post("/parkingspace/Updatespace",upload.single("parking_images"),parkingController.Updatespace)
-router.post("/parkingspace/single",parkingController.single)
-router.post("/parkingspace/deleteOne",parkingController.DeleteOne)
-// router.post("/parkingspace/Updatespace",parkingController.Updatespace)
+// Parking Spaces
+router.post("/parkingspace/add", upload.array("images", 5), parkingController.add);
+router.post("/parkingspace/Updatespace", upload.single("parking_images"), parkingController.Updatespace);
+router.post("/parkingspace/single", parkingController.single);
+router.post("/parkingspace/deleteOne", parkingController.DeleteOne);
+router.post("/parkingspace/toggle-status", parkingController.toggleStatus);
+router.post("/parkingspace/all", parkingController.all);
 
 // Parking Slots
-router.post("/parkingslots/add",psController.add)
-router.post("/parkingslots/single",psController.single)
-router.post("/parkingslots/deleteOne",psController.DeleteOne)
-router.post("/parkingslots/UpdateSlots",psController.UpdateSlots)
-router.post("/parkingslots/all",psController.all)
-
-// Bookings
-router.post("/bookings/add",bookingController.add)
-router.post("/bookings/single",bookingController.single)
-router.post("/bookings/deleteOne",bookingController.DeleteOne)
-router.post("/bookings/Updatebooking",bookingController.Updatebooking)
-router.post("/bookings/all",bookingController.all)
-
-// Late_Penalty
-router.post("/penalty/add",lateController.add)
-router.post("/penalty/single",lateController.single)
-router.post("/penalty/deleteOne",lateController.DeleteOne)
-router.post("/penalty/Updatepenalty",lateController.Updatepenalty)
-router.post("/penalty/all",lateController.all)
-
-// Parking_Availabilty
-router.post("/availabilities/add",paController.add)
-router.post("/availabilities/single",paController.single)
-router.post("/availabilities/deleteOne",paController.DeleteOne)
-router.post("/availabilities/Updateavailability",paController.Updateavailability)
-router.post("/availabilities/all",paController.all)
-
-// Payments
-router.post("/payments/add",paymentsController.add)
-router.post("/payments/single",paymentsController.single)
-router.post("/payments/deleteOne",paymentsController.DeleteOne)
-router.post("/payments/Updatepayments",paymentsController.Updatepayments)
-router.post("/payments/all",paymentsController.all)
+router.post("/parkingslots/add", psController.add);
+router.post("/parkingslots/single", psController.single);
+router.post("/parkingslots/deleteOne", psController.DeleteOne);
+router.post("/parkingslots/UpdateSlots", psController.UpdateSlots);
+router.post("/parkingslots/all", psController.all);
 
 // Pricing
-router.post("/pricing/add",pricingController.add)
-router.post("/pricing/single",pricingController.single)
-router.post("/pricing/deleteOne",pricingController.DeleteOne)
-router.post("/pricing/Updatepricing",pricingController.Updatepricing)
-router.post("/pricing/all",pricingController.all)
+router.post("/pricing/add", pricingController.add);
+router.post("/pricing/single", pricingController.single);
+router.post("/pricing/deleteOne", pricingController.DeleteOne);
+router.post("/pricing/Updatepricing", pricingController.Updatepricing);
+router.post("/pricing/all", pricingController.all);
 
+// Availability
+router.post("/availabilities/add", paController.add);
+router.post("/availabilities/single", paController.single);
+router.post("/availabilities/deleteOne", paController.DeleteOne);
+router.post("/availabilities/Updateavailability", paController.Updateavailability);
+router.post("/availabilities/all", paController.all);
 
-// Category
+// Bookings
+router.post("/bookings/all", bookingController.ownerBookings);
+router.post("/bookings/single", bookingController.single);
+router.post("/bookings/check-in", bookingController.checkIn);
+router.post("/bookings/checkout", bookingController.checkout);
 
-router.post("/category/add",upload.single("image"),categoryController.add)
-router.post("/category/UpdateCategory",upload.single("image"),categoryController.UpdateCategory)
-// router.post("/category/add",categoryController.add)
-router.post("/category/single",categoryController.single)
-router.post("/category/deleteOne",categoryController.DeleteOne)
-// router.post("/category/UpdateCategory",categoryController.UpdateCategory)
-router.post("/category/all",categoryController.all)
+// Earnings & Withdrawals
+router.post("/earnings/summary", withdrawalController.getEarningsSummary);
+router.post("/withdrawals/request", withdrawalController.requestWithdrawal);
+router.post("/withdrawals/history", withdrawalController.ownerWithdrawals);
 
-
-
-
-
-
-
-
-module.exports=router;
+module.exports = router;

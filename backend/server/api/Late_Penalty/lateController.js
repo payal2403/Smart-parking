@@ -1,230 +1,53 @@
 const lateModel = require("./lateModel");
 
-
-
-
-const add = (req, res) => {
-  let LateObj = new lateModel();
-  LateObj.penaltyId = req.body.penaltyId;
-  LateObj.lateMinutes = req.body.lateMinutes;
-  LateObj.penaltyAmount= req.body.penaltyAmount;
-  
-
-  
-  LateObj
-    .save()
-    .then((data) => {
-      res.send({
-        status: 201,
-        message: "Penalty Created",
-        success:true,
-        data: data,
+const getRule = async (req, res) => {
+  try {
+    let rule = await lateModel.findOne({ isActive: true });
+    if (!rule) {
+      rule = new lateModel({
+        ruleName: "Standard Platform Policy",
+        gracePeriodMinutes: 15,
+        lateFeePerHour: 50,
+        maxLateFee: 500,
+        isActive: true
       });
-    })
-    .catch((err) => {
-      res.send({
-    status: 500,
-    message: "Error while saving penalties",
-    success: false,
-    error: err.message
-  });
-    });
-};
-
-
-const single = (req, res) => {
-  let ErrMsg = [];
-
-  if (!req.body._id) {
-    ErrMsg.push("_id is required");
-  }
-
-  if (ErrMsg.length > 0) {
-    res.send({
-      status: 404,
-      message: ErrMsg,
-      success: false,
-    });
-  } else {
-    lateModel
-      .findOne({ _id: req.body._id })
-      .then((Existpenalty) => {
-        if (Existpenalty == null) {
-          res.send({
-            status: 404,
-            message: "Not Found",
-            success: false,
-          });
-        } else {
-          res.send({
-            status: 200,
-            message: "Found",
-            success: true,
-            data: Existpenalty,
-          });
-        }
-      })
-      .catch((err) => {
-        res.send({
-          status: 500,
-          message: "Internal Server Error",
-          success: false,
-        });
-      });
+      await rule.save();
+    }
+    res.send({ status: 200, message: "Late fee rule fetched", success: true, data: rule });
+  } catch (err) {
+    res.send({ status: 500, message: "Error fetching late fee rule", success: false, error: err.message });
   }
 };
 
-const DeleteOne = (req, res) => {
-  let ErrMsg = [];
+const updateRule = async (req, res) => {
+  try {
+    const { gracePeriodMinutes, lateFeePerHour, maxLateFee, ruleName } = req.body;
+    let rule = await lateModel.findOne({ isActive: true });
+    if (!rule) {
+      rule = new lateModel();
+    }
 
-  if (!req.body._id) {
-    ErrMsg.push("_id is required");
-  }
+    if (gracePeriodMinutes !== undefined) rule.gracePeriodMinutes = Number(gracePeriodMinutes);
+    if (lateFeePerHour !== undefined) rule.lateFeePerHour = Number(lateFeePerHour);
+    if (maxLateFee !== undefined) rule.maxLateFee = Number(maxLateFee);
+    if (ruleName) rule.ruleName = ruleName;
+    rule.updatedAt = new Date();
 
-  if (ErrMsg.length > 0) {
-    res.send({
-      status: 404,
-      message: ErrMsg,
-      success: false,
-    });
-  } else {
-    lateModel
-      .findOne({ _id: req.body._id })
-      .then((Existpenalty) => {
-        if (Existpenalty== null) {
-          res.send({
-            status: 404,
-            message: "Not Found",
-            success: false,
-          });
-        } else {
-          lateModel.deleteOne({ _id: req.body._id }).then(() => {
-            res.send({
-              status: 200,
-              message: "delete",
-              success: true,
-            });
-          }).catch((err)=>{
-             res.send({
-          status: 500,
-          message: "Internal Server Error",
-          success: false,
-        });
-          })
-        }
-      })
-      .catch((err) => {
-        res.send({
-          status: 500,
-          message: "Internal Server Error",
-          success: false,
-        });
-      });
+    const saved = await rule.save();
+    res.send({ status: 200, message: "Late fee policy updated successfully", success: true, data: saved });
+  } catch (err) {
+    res.send({ status: 500, message: "Error updating late fee rule", success: false, error: err.message });
   }
 };
 
-const Updatepenalty = (req, res) => {
-  let ErrMsg = [];
-
-  if (!req.body._id) {
-    ErrMsg.push("_id is required");
-  }
-
-  if (ErrMsg.length > 0) {
-    res.send({
-      status: 404,
-      message: ErrMsg,
-      success: false,
-    });
-  } else {
-    lateModel
-      .findOne({ _id: req.body._id })
-      .then((Existpenalty) => {
-        if (Existpenalty == null) {
-          res.send({
-            status: 404,
-            message: "Not Found",
-            success: false,
-          });
-        } else {
-
-
-          if (req.body.penaltyId ) {
-            Existpenalty.penaltyId =req.body.penaltyId 
-          }
-
-          if (req.body.lateMinutes) {
-            Existpenalty.lateMinutes=req.body.lateMinutes
-          }
-          if (req.body.penaltyAmount) {
-            Existpenalty.penaltyAmount=req.body.penaltyAmount
-          }
-        
-           
-
-          Existpenalty.save() .then((data) => {
-              res.send({
-                status: 200,
-                message: "Penalty Updated 🎉",
-                data: data,
-              });
-            })
-            
-            .catch((err) => {
-              res.send({
-                status:500,
-                message:"Internal server error",
-                error:err
-              })
-            });
-
-
-
-        }
-      })
-      .catch((err) => {
-        res.send({
-          status: 500,
-          message: "Internal Server Error",
-          success: false,
-        });
-      });
-  }
+module.exports = {
+  getRule,
+  updateRule,
+  add: updateRule,
+  single: getRule,
+  all: getRule,
+  Updatepenalty: updateRule,
+  DeleteOne: (req, res) => res.send({ status: 200, message: "Default policy active", success: true })
 };
 
-const all = (req, res) => {
-  lateModel
-    .find(req.body)
-    .then((Existpenalty) => {
-      if (Existpenalty == null) {
-        res.send({
-          status: 404,
-          message: "Penalty Not Found",
-          success: false,
-        });
-      } else {
-        res.send({
-          status: 200,
-          message: "All penalty",
-          success: true,
-          totalspace: Existpenalty.length,
-          data: Existpenalty,
-        });
-      }
-    })
-    .catch((err) => {
-      res.send({
-        status: 500,
-        message: "Internal Server Error",
-        success: false,
-      });
-    });
-};
-module.exports={
-    add,
-    single,
-    DeleteOne,
-    Updatepenalty,
-    all
-}
 

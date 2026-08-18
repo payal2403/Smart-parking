@@ -1,182 +1,173 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, Zoom } from "react-toastify";
 import Apiservices from "../../../Apiservices";
 import Switch from "react-switch";
-import { useNavigate } from "react-router-dom";
-import {RingLoader} from "react-spinners"
 
 const ManageSpace = () => {
-  const [data, setdata] = useState([]);
-   const[loading,setloading]=useState(false);
-
+  const [spaces, setSpaces] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
-    fatch();
+    fetchSpaces();
   }, []);
-  
-  const fatch = async () => {
-    setloading(true)
+
+  const fetchSpaces = async () => {
+    setLoading(true);
     try {
-      const res = await Apiservices.ManageSpace();
-      console.log(res.data.data);
-      setdata(res.data.data);
+      const res = await Apiservices.getOwnerSpaces();
+      if (res.data.success) {
+        setSpaces(res.data.data || []);
+      }
     } catch (err) {
-      console.log(err);
-    }finally{
-      setloading(false)
+      toast.error("Failed to load spaces");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // HARD DELETE
-  const deletespace = (id) => {
-    
-    // console.log("HLO",id);
-    
-    const data1 = {
-      _id: id,
-    };
-    
-  
-    Apiservices.DeleteSpace(data1)
-      .then((res) => {
-        console.log(res);
-
-        if (res.data.success) {
-          toast.success(res.data.message);
-          fatch();
-        } else {
-          toast.warning(res.data.message);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      
-  };
-
-  
-  const toggelStatus = async (id) => {
-    setloading(true)
-    
-    setdata((prev) =>
-      prev.map((item) =>
-        item._id === id ? { ...item, status: !item.status } : item,
-      ),
-    );
-
-    const data1 = {
-      _id: id,
-    };
-
-    const res = await Apiservices.SoftDeleteSpace(data1);
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this parking space?")) return;
     try {
+      const res = await Apiservices.deleteOwnerSpace({ _id: id });
       if (res.data.success) {
-        toast.success(res.data.message);
+        toast.success("Parking space deleted", { transition: Zoom });
+        fetchSpaces();
       } else {
         toast.warning(res.data.message);
       }
     } catch (err) {
-      console.log(err);
-    }finally{
-        setloading(false);
-      }
+      toast.error("Delete failed");
+    }
   };
-return(
 
+  const handleToggleStatus = async (id, currentStatus) => {
+    try {
+      const res = await Apiservices.toggleSpaceStatus({ _id: id });
+      if (res.data.success) {
+        toast.success(res.data.message, { transition: Zoom });
+        fetchSpaces();
+      } else {
+        toast.warning(res.data.message);
+      }
+    } catch (err) {
+      toast.error("Status toggle failed");
+    }
+  };
 
-     <>
-     {/* contact section */ }
-        < section className = "contact_section layout_padding" >
-            <div className="container">
-                <div className="heading_container">
-                    <h1>
-                        <span>ManageSpace</span>
-                    </h1>
-                </div>
-                <div className="layout_padding2-top">
-                    <div className="row justify-content-center">
-                        <div className="col-md-6 ">
-                           
-                                     
-                                    <table className="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Sno</th>
-                        <th scope="col">title</th>
-                        <th scope="col">address</th>
-                        <th scope="col">latitude</th>
-                        <th scope="col">longitude</th>
-                        <th scope="col">totalArea</th>
-                        <th scope="col">Image</th>
-                        <th scope="col">Action</th>
-                        <th scope="col">Edit</th>
-                        <th scope="col">Delete</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.map((el, i) => (
-                        <tr key={el._id}>
-                          <th scope="row">{i + 1}</th>
-                          <td>{el.title}</td>
-                          <td>{el.address}</td>
-                          <td>{el.latitude}</td>
-                          <td>{el.longitude}</td>
-                          <td>{el.totalArea}</td>
-                          <td>
-                            <img
-                              src={ el.parking_images}
-                              alt="Image"
-                              width={50}
-                            />
-                          </td>
+  return (
+    <div className="container-fluid bg-light py-5 min-vh-100">
+      <div className="container">
+        <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+          <div>
+            <h2 className="fw-bold text-dark mb-1">
+              <i className="fas fa-parking text-primary me-2"></i> Manage Parking Spaces
+            </h2>
+            <p className="text-muted small mb-0">Total Listed: {spaces.length}</p>
+          </div>
+          <Link to="/owner/addspace" className="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm mt-2 mt-md-0">
+            <i className="fas fa-plus me-1"></i> Add New Space
+          </Link>
+        </div>
 
-                          <td>
-                            <Switch
-                              checked={el.status}
-                              onChange={() => toggelStatus(el._id, el.status)}
-                            />
-                          </td>
+        <div className="card border-0 shadow-sm rounded-4 p-4 bg-white">
+          {loading ? (
+            <div className="text-center py-5"><div className="spinner-border text-primary"></div></div>
+          ) : spaces.length > 0 ? (
+            <div className="table-responsive">
+              <table className="table align-middle">
+                <thead className="table-light">
+                  <tr>
+                    <th>Photo</th>
+                    <th>Title & Address</th>
+                    <th>Slots Free / Total</th>
+                    <th>Pricing</th>
+                    <th>Admin Approval</th>
+                    <th>Listing Active</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {spaces.map((s) => {
+                    const img = s.images && s.images.length > 0 ? s.images[0] : (s.parking_images || "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=200&q=80");
+                    const isApproved = s.approvalStatus === "APPROVED";
 
-                         <td>
+                    return (
+                      <tr key={s._id}>
+                        <td>
+                          <img
+                            src={img}
+                            alt={s.title}
+                            className="rounded-3 border object-fit-cover"
+                            style={{ width: 64, height: 48, objectFit: "cover" }}
+                          />
+                        </td>
+                        <td>
+                          <div className="fw-bold text-dark">{s.title}</div>
+                          <div className="small text-muted">{s.address} {s.city ? `, ${s.city}` : ""}</div>
+                        </td>
+                        <td>
+                          <span className="badge bg-light text-dark border px-3 py-2">
+                            {s.availableSlots || 0} / {s.totalSlots || 0} Free
+                          </span>
+                        </td>
+                        <td>
+                          <span className="fw-bold text-primary">₹{s.hourlyRate || s.pricing?.hourlyRate || 40}/hr</span>
+                        </td>
+                        <td>
+                          <span className={`badge rounded-pill ${
+                            s.approvalStatus === 'APPROVED' ? 'bg-success' :
+                            s.approvalStatus === 'REJECTED' ? 'bg-danger' : 'bg-warning text-dark'
+                          }`}>
+                            {s.approvalStatus || 'PENDING'}
+                          </span>
+                        </td>
+                        <td>
+                          <Switch
+                            checked={Boolean(s.Status !== false)}
+                            onChange={() => handleToggleStatus(s._id, s.Status)}
+                            onColor="#015fc9"
+                            uncheckedIcon={false}
+                            checkedIcon={false}
+                            height={22}
+                            width={44}
+                          />
+                        </td>
+                        <td>
+                          <div className="d-flex gap-2">
                             <button
-                         className="btn btn-secondary"
-                   onClick={() => navigate(`/owner/updateSpace/${el._id}`)}
-                     >Edit
-                   </button>
-</td>
-<td>
-                     
+                              className="btn btn-sm btn-outline-secondary rounded-pill px-3"
+                              onClick={() => navigate(`/owner/updateSpace/${s._id}`)}
+                            >
+                              Edit
+                            </button>
                             <button
-                              onClick={() => {
-                                deletespace(el._id);
-                              }}
-                              className="btn btn-danger"
+                              className="btn btn-sm btn-outline-danger rounded-pill px-3"
+                              onClick={() => handleDelete(s._id)}
                             >
                               Delete
                             </button>
-                          </td>
-
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
-          </div>
-        </section>
-          <div class="service-content p-4">
-                        <div class="service-content-inner">
-                            <a href="#" class="d-inline-block h4 mb-4">Nearest Parking Finder</a>
-                            <p class="mb-4">Locate nearby parking spaces quickly using smart GPS tracking.</p>
-                            <a class="btn btn-primary rounded-pill py-2 px-4" href="#">Read More</a>
-                        </div>
-                    </div>
-      </>
-    
-  )
-}
+          ) : (
+            <div className="text-center py-5">
+              <i className="fas fa-parking fa-3x text-muted mb-3"></i>
+              <h5 className="fw-bold text-dark">No Parking Spaces Listed Yet</h5>
+              <p className="text-muted small mb-3">Add your first parking facility to start accepting drivers.</p>
+              <Link to="/owner/addspace" className="btn btn-primary rounded-pill px-4">Create Listing</Link>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
-export default ManageSpace
+export default ManageSpace;

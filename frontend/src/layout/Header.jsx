@@ -1,189 +1,152 @@
-import { Link } from "react-router-dom";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast, Zoom } from "react-toastify";
 
-const Header=()=>{
-    return(
-        <>  <div className="container-fluid topbar px-0 px-lg-4 bg-light py-2 d-none d-lg-block">
-    <div className="header1">
-      <div className="row gx-0 align-items-center">
-        <div className="col-lg-8 text-center text-lg-start mb-lg-0">
-          <div className="d-flex flex-wrap">
-            <div className="border-end border-primary pe-3">
-              <a href="#" className="text-muted small">
-                <i className="fas fa-map-marker-alt text-primary me-2" />
-                Find A Location
-              </a>
+const Header = () => {
+  const navigate = useNavigate();
+  const token = sessionStorage.getItem("token");
+  const userType = sessionStorage.getItem("userType");
+  const userName = sessionStorage.getItem("name") || "Account";
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    toast.info("You have been signed out", { transition: Zoom });
+    navigate("/login");
+  };
+
+  return (
+    <>
+      {/* Topbar Start */}
+      <div className="container-fluid topbar px-0 px-lg-4 bg-light py-2 d-none d-lg-block">
+        <div className="container">
+          <div className="row gx-0 align-items-center">
+            <div className="col-lg-8 text-center text-lg-start mb-lg-0">
+              <div className="d-flex flex-wrap">
+                <div className="border-end border-primary pe-3">
+                  <Link to="/view" className="text-muted small text-decoration-none">
+                    <i className="fas fa-map-marker-alt text-primary me-2" />
+                    Find Nearby Parking
+                  </Link>
+                </div>
+                <div className="ps-3">
+                  <a href="mailto:support@parkease.com" className="text-muted small text-decoration-none">
+                    <i className="fas fa-envelope text-primary me-2" />
+                    support@parkease.com
+                  </a>
+                </div>
+              </div>
             </div>
-            <div className="ps-3">
-              <a href="mailto:example@gmail.com" className="text-muted small">
-                <i className="fas fa-envelope text-primary me-2" />
-                example@gmail.com
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="col-lg-4 text-center text-lg-end">
-          <div className="d-flex justify-content-end">
-            <div className="d-flex border-end border-primary pe-3">
-              <a className="btn p-0 text-primary me-3" href="#">
-                <i className="fab fa-facebook-f" />
-              </a>
-              <a className="btn p-0 text-primary me-3" href="#">
-                <i className="fab fa-twitter" />
-              </a>
-              <a className="btn p-0 text-primary me-3" href="#">
-                <i className="fab fa-instagram" />
-              </a>
-              <a className="btn p-0 text-primary me-0" href="#">
-                <i className="fab fa-linkedin-in" />
-              </a>
-            </div>
-            <div className="dropdown ms-3">
-              <a
-                href="#"
-                className="dropdown-toggle text-dark"
-                data-bs-toggle="dropdown"
-              >
-                <small>
-                  <i className="fas fa-globe-europe text-primary me-2" />{" "}
-                  English
-                </small>
-              </a>
-              <div className="dropdown-menu rounded">
-                <a href="#" className="dropdown-item">
-                  English
-                </a>
-                <a href="#" className="dropdown-item">
-                  Bangla
-                </a>
-                <a href="#" className="dropdown-item">
-                  French
-                </a>
-                <a href="#" className="dropdown-item">
-                  Spanish
-                </a>
-                <a href="#" className="dropdown-item">
-                  Arabic
-                </a>
+            <div className="col-lg-4 text-center text-lg-end">
+              <div className="d-flex justify-content-end align-items-center">
+                <div className="d-flex border-end border-primary pe-3">
+                  <a className="btn p-0 text-primary me-3" href="#"><i className="fab fa-facebook-f" /></a>
+                  <a className="btn p-0 text-primary me-3" href="#"><i className="fab fa-twitter" /></a>
+                  <a className="btn p-0 text-primary me-3" href="#"><i className="fab fa-instagram" /></a>
+                  <a className="btn p-0 text-primary me-0" href="#"><i className="fab fa-linkedin-in" /></a>
+                </div>
+                <div className="ms-3">
+                  <small className="text-muted">
+                    <i className="fas fa-headset text-primary me-1" /> 24/7 Smart Assistance
+                  </small>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  {/* Topbar End */}
-  {/* Navbar & Hero Start */}
-  <div className="container-fluid nav-bar px-0 px-lg-4 py-lg-0">
-    <div className="container">
-      <nav className="navbar navbar-expand-lg navbar-light">
-        <a href="#" className="navbar-brand p-0">
-          <h1 className="text-primary mb-0">
-            <i className="fab fa-slack me-2" /> ParkEase
-          </h1>
-          {/* <img src="img/logo.png" alt="Logo"> */}
-        </a>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarCollapse"
-        >
-          <span className="fa fa-bars" />
-        </button>
-        <div className="collapse navbar-collapse" id="navbarCollapse">
-          <div className="navbar-nav mx-0 mx-lg-auto">
-            <Link to={"/home"} className="nav-item nav-link">
-              Home
+      {/* Topbar End */}
+
+      {/* Navbar Start */}
+      <div className="container-fluid nav-bar px-0 px-lg-4 py-lg-0 bg-white shadow-sm sticky-top">
+        <div className="container">
+          <nav className="navbar navbar-expand-lg navbar-light py-2">
+            <Link to="/" className="navbar-brand p-0">
+              <h2 className="text-primary mb-0 fw-bold">
+                <i className="fas fa-parking me-2" /> ParkEase
+              </h2>
             </Link>
-            <Link to={"/about"} className="nav-item nav-link">
-              About
-            </Link>
-            <Link to={"/Service"} className="nav-item nav-link">
-              Services
-            </Link>
-            {/* <Link to={"/contact"} className="nav-item nav-link">
-              Contact
-            </Link> */}
-            {/* <div className="nav-item dropdown">
-              <Link to="#" className="nav-link" data-bs-toggle="dropdown">
-                <span className="dropdown-toggle">Add</span>
-              </Link>
-              <div className="dropdown-menu">
-                <Link to={"/owner/addprice"} className="dropdown-item">
-                  Addprice
-                </Link> 
-                <Link to={"/"} className="dropdown-item">
-                  Our team
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarCollapse"
+            >
+              <span className="fa fa-bars" />
+            </button>
+            <div className="collapse navbar-collapse" id="navbarCollapse">
+              <div className="navbar-nav mx-0 mx-lg-auto">
+                <Link to="/" className="nav-item nav-link fw-semibold">
+                  Home
                 </Link>
-                <Link to={"/Testimonial"} className="dropdown-item">
-                  Testimonial
+                <Link to="/view" className="nav-item nav-link fw-semibold">
+                  <i className="fas fa-compass text-primary me-1" /> Find Parking
                 </Link>
-                <Link to={"/FAQ"} className="dropdown-item">
+                <Link to="/about" className="nav-item nav-link fw-semibold">
+                  About
+                </Link>
+                <Link to="/Service" className="nav-item nav-link fw-semibold">
+                  Services
+                </Link>
+                <Link to="/FAQ" className="nav-item nav-link fw-semibold">
                   FAQs
                 </Link>
-                <a href="404.html" className="dropdown-item">
-                  404 Page
-                </a>
+                <Link to="/contact" className="nav-item nav-link fw-semibold">
+                  Contact
+                </Link>
               </div>
-            </div> */}
-            <Link to={"/contact"} className="nav-item nav-link active">
-              Contact
-            </Link>
-            <div className="nav-btn px-3">
-                <Link
-                to={"/register"}
-                className="btn btn-primary rounded-pill py-2 px-4 ms-3 flex-shrink-0"
-              >
-               
-                Register
-              </Link>
 
-
-              {/* <button
-                className="btn-search btn btn-primary btn-md-square rounded-circle flex-shrink-0"
-                data-bs-toggle="modal"
-                data-bs-target="#searchModal"
-              >
-                <i className="fas fa-search" />
-              </button> */}
-
-
-              <Link
-                to={"/login"}
-                className="btn btn-primary rounded-pill py-2 px-4 ms-3 flex-shrink-0"
-              >
-               
-                Login
-              </Link>
+              <div className="d-flex align-items-center gap-2">
+                {token ? (
+                  <div className="d-flex align-items-center gap-2">
+                    {userType === "1" && (
+                      <Link to="/admin" className="btn btn-warning rounded-pill px-4 py-2 fw-semibold shadow-sm">
+                        <i className="fas fa-shield-alt me-1" /> Admin Center
+                      </Link>
+                    )}
+                    {userType === "2" && (
+                      <Link to="/owner" className="btn btn-success rounded-pill px-4 py-2 fw-semibold shadow-sm">
+                        <i className="fas fa-store me-1" /> Host Portal
+                      </Link>
+                    )}
+                    {userType === "3" && (
+                      <Link to="/user/dashboard" className="btn btn-primary rounded-pill px-4 py-2 fw-semibold shadow-sm">
+                        <i className="fas fa-car me-1" /> My Bookings
+                      </Link>
+                    )}
+                    <button
+                      onClick={handleLogout}
+                      className="btn btn-outline-danger rounded-pill px-3 py-2 fw-semibold"
+                      title="Sign Out"
+                    >
+                      <i className="fas fa-sign-out-alt" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="d-flex align-items-center gap-2 flex-nowrap">
+                    <Link
+                      to="/login"
+                      className="btn btn-outline-primary rounded-pill px-4 py-2 fw-semibold text-nowrap"
+                      style={{ transition: "all 0.2s ease" }}
+                    >
+                      <i className="fas fa-sign-in-alt me-1"></i> Sign In
+                    </Link>
+                    <Link
+                      to="/register"
+                      className="btn btn-primary rounded-pill px-4 py-2 fw-semibold text-nowrap shadow-sm"
+                      style={{ transition: "all 0.2s ease" }}
+                    >
+                      <i className="fas fa-user-plus me-1"></i> Register
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          </nav>
         </div>
-        <div className="d-none d-xl-flex flex-shrink-0 ps-4">
-          <a
-            href="#"
-            className="btn btn-light btn-lg-square rounded-circle position-relative wow tada"
-            data-wow-delay=".9s"
-          >
-            <i className="fa fa-phone-alt fa-2x" />
-            <div className="position-absolute" style={{ top: 7, right: 12 }}>
-              <span>
-                <i className="fa fa-comment-dots text-secondary" />
-              </span>
-            </div>
-          </a>
-          <div className="d-flex flex-column ms-3">
-            <span>Call to Our Experts</span>
-            <a href="tel:+ 0123 456 7890">
-              <span className="text-dark">Free: + 0123 456 7890</span>
-            </a>
-          </div>
-        </div>
-      </nav>
-    </div>
-  </div>
-  {/* Navbar & Hero End */}
-       
-        </>
-    )
-}
+      </div>
+      {/* Navbar End */}
+    </>
+  );
+};
+
 export default Header;
