@@ -8,8 +8,10 @@ class Apiservices {
   getToken() {
     const token = sessionStorage.getItem("token");
     const head = {
-      Authorization: token ? `Bearer ${token}` : "",
+      Authorization: token ,
     };
+   
+    
     return { headers: head };
   }
 
@@ -17,7 +19,7 @@ class Apiservices {
     const token = sessionStorage.getItem("token");
     return {
       headers: {
-        Authorization: token ? `Bearer ${token}` : "",
+        Authorization: token ,
         "Content-Type": "multipart/form-data",
       },
     };
