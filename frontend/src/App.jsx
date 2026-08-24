@@ -1,6 +1,8 @@
-import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React, { useEffect } from "react";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 // Layouts
 import Master from "./layout/Master";
@@ -56,10 +58,35 @@ import AddCategory from "./components/Admin/AddCategory";
 import ManageCategory from "./components/Admin/ManageCategory";
 import UpdateCategory from "./components/Admin/UpdateCategory";
 
+const AOSInitializer = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      easing: "ease-in-out",
+      once: false,
+      mirror: false,
+      offset: 50,
+    });
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    // Refresh AOS on route changes to re-bind elements
+    setTimeout(() => {
+      AOS.refresh();
+    }, 100);
+  }, [location.pathname]);
+
+  return null;
+};
+
 const App = () => {
   return (
     <>
       <BrowserRouter>
+        <AOSInitializer />
         <Routes>
           {/* Public & Driver Routes */}
           <Route path="/" element={<Master />}>

@@ -3,7 +3,7 @@
     return(
         <>
         {/* Footer Start */}
- <div className="container-fluid footer py-4">
+ <div className="container-fluid footer py-4" data-aos="fade-down-right">
   <div className="container">
 
     <div className="row g-4">
