@@ -2,7 +2,7 @@
     return(
         <>
         {/* Footer Start */}
- <div className="container-fluid footer py-5 wow fadeIn" data-wow-delay="0.2s">
+ <div className="container-fluid footer py-5" data-aos="fade-up" data-aos-duration="800">
   <div className="container py-5">
     <div className="row g-5">
       <div className="col-xl-9">
@@ -245,8 +245,9 @@
             <div className="footer-btn">
               <a
                 href="#"
-                className="btn btn-lg-square rounded-circle position-relative wow tada"
-                data-wow-delay=".9s"
+                className="btn btn-lg-square rounded-circle position-relative"
+                data-aos="zoom-in"
+                data-aos-delay="300"
               >
                 <i className="fa fa-phone-alt fa-2x" />
                 <div
