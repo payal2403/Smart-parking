@@ -345,13 +345,12 @@
 .bg-breadcrumb {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(rgba(1, 95, 201, 0.9), rgba(0, 0, 0, 0.2)), url(/img/bg-breadcrumb.jpg);
+    background: linear-gradient(rgba(1, 95, 201, 0.9), rgba(0, 0, 0, 0.2)), url(../img/bg-breadcrumb.jpg);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
     padding: 60px 0 60px 0;
     transition: 0.5s;
-    
 }
 
 .bg-breadcrumb .breadcrumb {
@@ -879,60 +878,96 @@
 }
 /*** Footer End ***/
 
-.name,.email,.pass,.contact,.address{
-    width: 300px;
-  height: 40px;
-  font-size: 16px;
-  padding: 5px;
-}
-
-
-.register{
-    margin-right: 35%;
-    
-    width: 100px;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*** copyright Start ***/
 .copyright {
     background: var(--bs-dark);
     border-top: 1px solid rgba(255, 255, 255, .08);
 }
+/*** copyright end ***/
 
+/* Contact Form */
 
+.contact-form {
+  width: 100%;
+}
 
+.contact-field {
+  position: relative;
+  width: 100%;
+}
 
+.contact-field input,
+.contact-field textarea {
+  width: 100%;
+  border: 1px solid #e1e5ea;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px 18px 8px;
+  font-size: 16px;
+  color: #17365d;
+  outline: none;
+  transition: 0.3s ease;
+  box-sizing: border-box;
+}
 
+.contact-field input {
+  height: 65px;
+}
 
+.contact-field textarea {
+  height: 150px;
+  resize: vertical;
+}
 
+.contact-field label {
+  position: absolute;
+  left: 18px;
+  top: 8px;
+  font-size: 13px;
+  color: #0767c9;
+  pointer-events: none;
+  transition: 0.3s ease;
+}
 
+/* Focus */
+.contact-field input:focus,
+.contact-field textarea:focus {
+  border-color: #0767c9;
+  box-shadow: 0 0 0 3px rgba(7, 103, 201, 0.1);
+}
 
+/* Placeholder */
+.contact-field input::placeholder,
+.contact-field textarea::placeholder {
+  color: transparent;
+}
 
+/* Show placeholder when focused */
+.contact-field input:focus::placeholder,
+.contact-field textarea:focus::placeholder {
+  color: #999;
+}
 
+/* Send Button */
+.contact-submit {
+  width: 100%;
+  height: 64px;
+  border: none;
+  border-radius: 8px;
+  background: #0767c9;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
 
+.contact-submit:hover {
+  background: #0555a5;
+  transform: translateY(-2px);
+}
 
-
-
-
-
-
-
-
-
-
-
+.contact-submit:active {
+  transform: translateY(0);
+}
